@@ -1,8 +1,1 @@
-[phases.setup]
-nixPkgs = ["php", "composer", "postgresql", "phpExtensions.pdo_pgsql", "phpExtensions.pgsql"]
-
-[phases.build]
-cmds = ["composer install --no-dev --optimize-autoloader"]
-
-[start]
-cmd = "php artisan serve --host=0.0.0.0 --port=8080"
+web: php artisan serve --host=0.0.0.0 --port=$PORT
