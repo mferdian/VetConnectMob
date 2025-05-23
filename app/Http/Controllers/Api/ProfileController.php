@@ -26,8 +26,6 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
@@ -36,8 +34,6 @@ class ProfileController extends Controller
             'no_telp' => 'nullable|string|max:15',
             'umur' => 'nullable|integer|min:1',
         ]);
-
-
 
 
         $userModel = User::find($user->id);
@@ -61,11 +57,11 @@ class ProfileController extends Controller
         }
 
         $userModel->save();
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
-            'data' => $userModel, // <- ini data yang sudah diupdate
+            'data' => $userModel,
         ]);
     }
 }

@@ -56,4 +56,13 @@ class BookingController extends Controller
 
         return response()->json($bookings);
     }
+
+    public function showVet()
+    {
+        $vets = Vet::all();
+        return response()->json([
+            'success' => true,
+            'data' => $vets
+        ]);
+    }
 }
