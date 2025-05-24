@@ -13,14 +13,22 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',    [AuthController::class, 'login']);
 
 Route::get('/articles', [ArticleController::class, 'index']);
-Route::get('/articles/vet/{vet_id}', [ArticleController::class, 'getByVet']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user/profile', [ProfileController::class, 'show']);
     Route::put('/user/profile', [ProfileController::class, 'update']);
-    Route::post('/bookings', [BookingController::class, 'store']);
+
+
+    //Appointment
     Route::get('/bookings', [BookingController::class, 'index']);
+    Route::get('/bookings/{id}', [BookingController::class, 'show']);
+    Route::post('/bookings', [BookingController::class, 'store']);
+    Route::patch('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
+
     Route::get('/vets', [BookingController::class, 'showVet']);
+
+
+
 });

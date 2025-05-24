@@ -3,21 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
-use Midtrans\Snap;
-use App\Models\Vet;
-use Midtrans\Config;
-use App\Models\Review;
-use App\Models\Booking;
-use App\Models\VetTime;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Models\Booking;
+use App\Models\Vet;
 
 class BookingController extends Controller
 {
-   public function store(Request $request)
+    // [POST] Buat booking
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'vet_id' => 'required|exists:vets,id',
@@ -37,7 +32,7 @@ class BookingController extends Controller
             'keluhan' => $validated['keluhan'] ?? null,
             'total_harga' => $validated['total_harga'],
             'status' => 'confirmed',
-            'status_bayar' => 'berhasil',
+            'status_bayar' => 'berhasil', 
             'metode_pembayaran' => $validated['metode_pembayaran'],
         ]);
 
@@ -47,6 +42,7 @@ class BookingController extends Controller
         ], 201);
     }
 
+    // [GET] Daftar booking user
     public function index(Request $request)
     {
         $bookings = Booking::with(['vet', 'vetDate', 'vetTime'])
@@ -57,6 +53,34 @@ class BookingController extends Controller
         return response()->json($bookings);
     }
 
+    // [GET] Detail booking
+    public function show($id)
+    {
+        $booking = Booking::with(['vet', 'vetDate', 'vetTime'])
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        return response()->json($booking);
+    }
+
+    // [PATCH] Batalkan booking
+    public function cancel($id)
+    {
+        $booking = Booking::where('user_id', Auth::id())->findOrFail($id);
+
+        if ($booking->status !== 'confirmed') {
+            return response()->json(['message' => 'Booking tidak bisa dibatalkan'], 400);
+        }
+
+        $booking->update([
+            'status' => 'cancelled',
+            'status_bayar' => 'dibatalkan'
+        ]);
+
+        return response()->json(['message' => 'Booking berhasil dibatalkan']);
+    }
+
+    // [GET] Semua dokter
     public function showVet()
     {
         $vets = Vet::all();

@@ -19,17 +19,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    Vet::factory(10)
-        ->has(
-            VetDate::factory()
-                ->count(3)
-                ->has(VetTime::factory()->count(4), 'vetTimes'),
-            'vetDates'
-        )
-        ->create();
+     // Buat 10 vet lengkap dengan vetDate dan vetTime
+        Vet::factory(10)
+            ->has(
+                VetDate::factory()
+                    ->count(3)
+                    ->has(VetTime::factory()->count(4), 'vetTimes'),
+                'vetDates'
+            )
+            ->create();
 
-    Spesialisasi::factory()->count(5)->create();
+        // Buat 5 spesialisasi
+        Spesialisasi::factory()->count(5)->create();
 
+        // Buat user admin
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@vetconnect.com',
@@ -37,6 +40,7 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
         ]);
 
+        // Buat user biasa
         User::create([
             'name' => 'gunawan',
             'email' => 'gugun@gmail.com',
@@ -46,5 +50,8 @@ class DatabaseSeeder extends Seeder
             'umur' => 30,
             'is_admin' => false,
         ]);
+
+        // Buat 20 artikel
+        Article::factory()->count(5)->create();
     }
 }
