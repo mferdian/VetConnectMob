@@ -17,8 +17,8 @@ Route::get('/articles', [ArticleController::class, 'index']);
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/user/profile', [ProfileController::class, 'show']);
-    Route::put('/user/profile', [ProfileController::class, 'update']);
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::post('/profile/update', [ProfileController::class, 'update']);
 
 
     //Appointment
