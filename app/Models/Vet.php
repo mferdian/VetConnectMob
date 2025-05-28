@@ -18,6 +18,7 @@ class Vet extends Model
         'alamat',
         'STR',
         'SIP',
+        'alumni',
         'jenis_kelamin',
         'foto',
         'tgl_lahir',
