@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('STR');
             $table->string('SIP');
+            $table->string('alumni');
             $table->unsignedBigInteger('harga');
             $table->boolean('jenis_kelamin');
             $table->string('foto');

@@ -67,8 +67,18 @@ class VetResource extends Resource
                     ->description('STR, SIP, dan spesialisasi dokter.')
                     ->icon('heroicon-o-briefcase')
                     ->schema([
-                        TextInput::make('STR')->label('Nomor STR')->required()->maxLength(50),
-                        TextInput::make('SIP')->label('Nomor SIP')->required()->maxLength(50),
+                        TextInput::make('STR')
+                            ->label('Nomor STR')
+                            ->required()
+                            ->maxLength(50),
+                        TextInput::make('SIP')
+                            ->label('Nomor SIP')
+                            ->required()
+                            ->maxLength(50),
+                        TextInput::make('alumni')
+                            ->label('Alumni Universitas')
+                            ->required()
+                            ->maxLength(50),
                         Select::make('spesialisasis')
                             ->relationship('spesialisasis', 'nama_hewan')
                             ->multiple()

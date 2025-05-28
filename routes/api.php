@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login',    [AuthController::class, 'login']);
-
+Route::post('/login', [AuthController::class, 'login']);
 Route::get('/articles', [ArticleController::class, 'index']);
 
 // Protected routes
@@ -20,15 +19,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::post('/profile/update', [ProfileController::class, 'update']);
 
-
-    //Appointment
+    // Booking & Vet
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/{id}', [BookingController::class, 'show']);
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::patch('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
 
     Route::get('/vets', [BookingController::class, 'showVet']);
-
-
-
+    Route::get('/vets/{id}', [BookingController::class, 'detailVet']);
+    Route::get('/vets/{id}/jadwal', [BookingController::class, 'schedule']);
 });

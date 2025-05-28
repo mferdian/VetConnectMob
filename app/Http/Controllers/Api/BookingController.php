@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VetResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Booking;
 use App\Models\Vet;
@@ -23,6 +23,16 @@ class BookingController extends Controller
             'metode_pembayaran' => 'required|in:transfer_bank,e-wallet,cash,lainnya',
         ]);
 
+        
+        $exists = Booking::where([
+            'vet_date_id' => $validated['vet_date_id'],
+            'vet_time_id' => $validated['vet_time_id'],
+        ])->where('status', '!=', 'cancelled')->exists();
+
+        if ($exists) {
+            return response()->json(['message' => 'Waktu tersebut sudah dibooking'], 400);
+        }
+
         $booking = Booking::create([
             'order_id' => 'ORD-' . Str::uuid(),
             'user_id' => $request->user()->id,
@@ -32,11 +42,12 @@ class BookingController extends Controller
             'keluhan' => $validated['keluhan'] ?? null,
             'total_harga' => $validated['total_harga'],
             'status' => 'confirmed',
-            'status_bayar' => 'berhasil', 
+            'status_bayar' => 'berhasil',
             'metode_pembayaran' => $validated['metode_pembayaran'],
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Booking berhasil dibuat',
             'data' => $booking
         ], 201);
@@ -50,26 +61,32 @@ class BookingController extends Controller
             ->latest()
             ->get();
 
-        return response()->json($bookings);
+        return response()->json([
+            'success' => true,
+            'data' => $bookings
+        ]);
     }
 
     // [GET] Detail booking
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $booking = Booking::with(['vet', 'vetDate', 'vetTime'])
-            ->where('user_id', Auth::id())
+            ->where('user_id', $request->user()->id)
             ->findOrFail($id);
 
-        return response()->json($booking);
+        return response()->json([
+            'success' => true,
+            'data' => $booking
+        ]);
     }
 
     // [PATCH] Batalkan booking
-    public function cancel($id)
+    public function cancel(Request $request, $id)
     {
-        $booking = Booking::where('user_id', Auth::id())->findOrFail($id);
+        $booking = Booking::where('user_id', $request->user()->id)->findOrFail($id);
 
         if ($booking->status !== 'confirmed') {
-            return response()->json(['message' => 'Booking tidak bisa dibatalkan'], 400);
+            return response()->json(['success' => false, 'message' => 'Booking tidak bisa dibatalkan'], 400);
         }
 
         $booking->update([
@@ -77,7 +94,7 @@ class BookingController extends Controller
             'status_bayar' => 'dibatalkan'
         ]);
 
-        return response()->json(['message' => 'Booking berhasil dibatalkan']);
+        return response()->json(['success' => true, 'message' => 'Booking berhasil dibatalkan']);
     }
 
     // [GET] Semua dokter
@@ -86,7 +103,43 @@ class BookingController extends Controller
         $vets = Vet::all();
         return response()->json([
             'success' => true,
-            'data' => $vets
+            'data' => VetResource::collection($vets)
+        ]);
+    }
+
+    // [GET] Detail dokter
+    public function detailVet($id)
+    {
+        $vet = Vet::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'data' => new VetResource($vet)
+        ]);
+    }
+
+    // [GET] Jadwal dokter
+    public function schedule($id)
+    {
+        $vet = Vet::with(['vetDates.vetTimes'])->findOrFail($id);
+
+        $jadwal = $vet->vetDates->map(function ($date) {
+            return [
+                'tanggal_id' => $date->id,
+                'tanggal' => $date->tanggal,
+                'waktu' => $date->vetTimes->map(function ($time) {
+                    return [
+                        'waktu_id' => $time->id,
+                        'jam' => $time->jam_mulai . ' - ' . $time->jam_selesai,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'vet_id' => $vet->id,
+            'nama' => $vet->nama,
+            'jadwal' => $jadwal
         ]);
     }
 }
