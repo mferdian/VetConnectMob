@@ -29,6 +29,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['profile_photo_url'];
+    
     protected function casts(): array
     {
         return [
@@ -36,6 +38,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo
+            ? asset('storage/' . $this->profile_photo)
+            : null;
+    }
+
 
     public function reviews():HasMany
     {
