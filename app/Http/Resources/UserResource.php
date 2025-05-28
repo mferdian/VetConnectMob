@@ -21,8 +21,7 @@ class UserResource extends JsonResource
             'no_telp' => $this->no_telp,
             'umur' => $this->umur,
             'alamat' => $this->alamat,
-            'profile_photo_url' => $this->profile_photo ? asset('storage/' . $this->profile_photo) : null,
-            'is_admin' => $this->is_admin,
+            'foto' => $this->profile_photo_url,
         ];
     }
 }
