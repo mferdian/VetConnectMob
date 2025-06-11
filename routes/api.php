@@ -23,9 +23,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::get('/bookings/{id}', [BookingController::class, 'show']);
     Route::post('/bookings', [BookingController::class, 'store']);
-    Route::patch('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
 
     Route::get('/vets', [BookingController::class, 'showVet']);
     Route::get('/vets/{id}', [BookingController::class, 'detailVet']);
     Route::get('/vets/{id}/jadwal', [BookingController::class, 'schedule']);
+
+    Route::get('/articles/{id}', [ArticleController::class, 'getById']);
 });
