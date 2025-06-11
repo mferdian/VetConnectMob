@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -31,6 +32,10 @@ class Vet extends Model
         'tgl_lahir' => 'date'
     ];
 
+    public function getFotoUrlAttribute()
+    {
+        return url('storage/foto_dokter/' . $this->foto);
+    }
 
     public function spesialisasis(): BelongsToMany
     {
@@ -56,4 +61,5 @@ class Vet extends Model
     {
         return $this->hasMany(Review::class);
     }
+
 }

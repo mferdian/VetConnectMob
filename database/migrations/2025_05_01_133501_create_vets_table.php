@@ -16,13 +16,13 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('no_telp');
-            $table->string('alamat');
+            $table->text('alamat');
             $table->string('STR');
             $table->string('SIP');
             $table->string('alumni');
             $table->unsignedBigInteger('harga');
             $table->boolean('jenis_kelamin');
-            $table->string('foto');
+            $table->string('foto')->nullable();
             $table->date('tgl_lahir');
             $table->text('deskripsi');
             $table->timestamps();

@@ -19,7 +19,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-     // Buat 10 vet lengkap dengan vetDate dan vetTime
+        // Buat 5 spesialisasi dulu
+        Spesialisasi::factory()->count(5)->create();
+
+        // Buat 10 vet + vetDate + vetTime, lalu attach spesialisasi
         Vet::factory(10)
             ->has(
                 VetDate::factory()
@@ -27,10 +30,11 @@ class DatabaseSeeder extends Seeder
                     ->has(VetTime::factory()->count(4), 'vetTimes'),
                 'vetDates'
             )
-            ->create();
-
-        // Buat 5 spesialisasi
-        Spesialisasi::factory()->count(5)->create();
+            ->create()
+            ->each(function ($vet) {
+                $spesialisasis = Spesialisasi::inRandomOrder()->take(rand(1, 3))->pluck('id');
+                $vet->spesialisasis()->attach($spesialisasis);
+            });
 
         // Buat user admin
         User::factory()->create([

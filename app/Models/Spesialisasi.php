@@ -18,5 +18,6 @@ class Spesialisasi extends Model
     {
         return $this->belongsToMany(vet::class, 'spesialisasi_vets');
     }
+    
 
 }

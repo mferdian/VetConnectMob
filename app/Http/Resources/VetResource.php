@@ -25,7 +25,7 @@ class VetResource extends JsonResource
             'alumni' => $this->alumni,
             'harga' => $this->harga,
             'jenis_kelamin' => $this->jenis_kelamin ? 'Laki-laki' : 'Perempuan',
-            'foto' => $this->foto,
+            'foto' => url('storage/foto_dokter/' . $this->foto),
             'tgl_lahir' => $this->tgl_lahir,
             'deskripsi' => $this->deskripsi,
         ];
