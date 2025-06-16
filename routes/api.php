@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/articles', [ArticleController::class, 'index']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -28,5 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/vets/{id}', [BookingController::class, 'detailVet']);
     Route::get('/vets/{id}/jadwal', [BookingController::class, 'schedule']);
 
-    Route::get('/articles/{id}', [ArticleController::class, 'getById']);
+    Route::get('/articles', [ArticleController::class, 'index']);        // Semua artikel
+    Route::get('/articles/{id}', [ArticleController::class, 'show']);    // Detail artikel
 });

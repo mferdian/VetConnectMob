@@ -7,29 +7,24 @@ use App\Models\Article;
 
 class ArticleController extends Controller
 {
+    /**
+     * Menampilkan semua artikel.
+     */
     public function index()
     {
-        // Ambil semua artikel dengan relasi vet
-        $articles = Article::with('vet')->get();
+        $articles = Article::select('id', 'judul', 'gambar')->get();
 
         return response()->json([
             'success' => true,
+            'message' => 'Daftar semua artikel',
             'data' => $articles
         ]);
     }
 
-
-    public function getByVet($vet_id)
-    {
-        $articles = Article::with('vet')->where('vet_id', $vet_id)->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $articles
-        ]);
-    }
-
-    public function getById($id)
+    /**
+     * Menampilkan detail artikel berdasarkan ID.
+     */
+    public function show($id)
     {
         $article = Article::with('vet')->find($id);
 
@@ -42,6 +37,7 @@ class ArticleController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Detail artikel ditemukan',
             'data' => $article
         ]);
     }

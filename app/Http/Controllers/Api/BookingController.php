@@ -23,7 +23,7 @@ class BookingController extends Controller
             'metode_pembayaran' => 'required|in:transfer_bank,e-wallet,cash,lainnya',
         ]);
 
-        
+
         $exists = Booking::where([
             'vet_date_id' => $validated['vet_date_id'],
             'vet_time_id' => $validated['vet_time_id'],
@@ -140,6 +140,18 @@ class BookingController extends Controller
             'vet_id' => $vet->id,
             'nama' => $vet->nama,
             'jadwal' => $jadwal
+        ]);
+    }
+
+    public function markAsCompleted($id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->status = 'Completed';
+        $booking->save();
+
+        return response()->json([
+            'message' => 'Booking marked as completed',
+            'data' => $booking,
         ]);
     }
 }
